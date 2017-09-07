@@ -41,8 +41,12 @@ def collatz_eval (i, j) :
     """
     maxCycleLength = 0
     for num in range(i,j+1):
-        print(num, collatz_cycleLength(num))
-    return 1
+        currentCycleLength = collatz_cycleLength(num)
+        # print("num", num, "has cycle length",currentCycleLength)
+        if currentCycleLength > maxCycleLength :
+            maxCycleLength = currentCycleLength            
+    return maxCycleLength
+
 
 # -------------
 # collatz_print
@@ -71,3 +75,7 @@ def collatz_solve (r, w) :
         i, j = collatz_read(s)
         v    = collatz_eval(i, j)
         collatz_print(w, i, j, v)
+
+import sys
+if __name__ == "__main__" :
+    collatz_solve(sys.stdin, sys.stdout)

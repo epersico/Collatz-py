@@ -23,13 +23,25 @@ def collatz_read (s) :
 # collatz_eval
 # ------------
 
+def collatz_cycleLength(n):
+    cycleLength = 1
+    while n != 1:
+        cycleLength += 1
+        if n%2 == 0:
+            n /= 2
+        else:
+            n = 3*n + 1
+    return cycleLength
+
 def collatz_eval (i, j) :
     """
     i the beginning of the range, inclusive
     j the end       of the range, inclusive
     return the max cycle length of the range [i, j]
     """
-    # <your code>
+    maxCycleLength = 0
+    for num in range(i,j+1):
+        print(num, collatz_cycleLength(num))
     return 1
 
 # -------------

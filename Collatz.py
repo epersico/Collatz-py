@@ -6,11 +6,13 @@
 # Glenn P. Downing
 # ----------------------------------
 
+# from io import StringIO
+# import cProfile
 # ------------
 # collatz_read
 # ------------
-
-def collatz_read (s) :
+import numpy as np
+def collatz_read(s):
     """
     read two ints
     s a string
@@ -43,7 +45,7 @@ def collatz_cycleLength(n):
 #     return maxCycleLength
 
 
-def collatz_eval (i, j) :
+def collatz_eval(i, j):
     """
     i the beginning of the range, inclusive
     j the end       of the range, inclusive
@@ -51,7 +53,8 @@ def collatz_eval (i, j) :
     """
     maxCycleLength = 0
     cycleLengthDict = {1 : 1}
-    for num in range(i,j+1):
+
+    for num in range(i, j+1):
         cycleLength = 1
         cycle = []
         n = num
@@ -68,14 +71,12 @@ def collatz_eval (i, j) :
                 n = 3*n + 1
         # print("Cycle length for",num, "is", cycleLength)
         # print(cycle)
-        if cycleLength > maxCycleLength :
+        if cycleLength > maxCycleLength:
             maxCycleLength = cycleLength  
 
-        cycle.reverse()
-        for i in range(0,len(cycle)) :
-            element = cycle.pop()
-            if element not in cycleLengthDict:
-                cycleLengthDict[element] = cycleLength
+        for i in range(0, len(cycle)):
+            if cycle[i] not in cycleLengthDict:
+                cycleLengthDict[cycle[i]] = cycleLength
                 # print("for ", element, "cycle length was",cycleLength)
             cycleLength -= 1
          
@@ -86,7 +87,7 @@ def collatz_eval (i, j) :
 # collatz_print
 # -------------
 
-def collatz_print (w, i, j, v) :
+def collatz_print(w, i, j, v):
     """
     print three ints
     w a writer
@@ -100,16 +101,19 @@ def collatz_print (w, i, j, v) :
 # collatz_solve
 # -------------
 
-def collatz_solve (r, w) :
+def collatz_solve(r, w):
     """
     r a reader
     w a writer
     """
-    for s in r :
+    for s in r:
         i, j = collatz_read(s)
-        v    = collatz_eval(i, j)
+        v = collatz_eval(i, j)
         collatz_print(w, i, j, v)
 
 import sys
-if __name__ == "__main__" :
+if __name__ == "__main__":
+        # r = StringIO("1 100\n100 2000\n201 2100\n900 10000\n")
+        # w = StringIO()
+        # collatz_solve(r, sys.stdout)
     collatz_solve(sys.stdin, sys.stdout)

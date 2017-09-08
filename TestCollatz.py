@@ -14,6 +14,7 @@
 
 from io       import StringIO
 from unittest import main, TestCase
+import cProfile
 
 from Collatz import collatz_read, collatz_eval, collatz_print, collatz_solve
 

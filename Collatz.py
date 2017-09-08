@@ -6,7 +6,7 @@
 # Glenn P. Downing
 # ----------------------------------
 
-from io import StringIO
+# from io import StringIO
 # import cProfile
 # ------------
 # collatz_read
@@ -51,21 +51,15 @@ def collatz_iterate(n):
         n = 3*n + 1
     return n
 
-def keywithmaxval(d):
-     """ a) create a list of the dict's keys and values; 
-         b) return the key with the max value"""  
-     v=list(d.values())
-     k=list(d.keys())
-     return k[v.index(max(v))]
-
-def collatz_eval(i, j):
+def collatz_eval(i, j, cycleLengthDict):
     """
     i the beginning of the range, inclusive
     j the end       of the range, inclusive
     return the max cycle length of the range [i, j]
     """
+
+    # cycleLengthDict = {1 : 1}
     maxCycleLength = 0
-    cycleLengthDict = {1 : 1}
 
     for n in range(i, j+1):
         cycleLength = 1
@@ -80,21 +74,25 @@ def collatz_eval(i, j):
                 # print("hit",n,"which was in dict with cycle length",cycleLengthDict[n])
                 break
             cycleLength += 1
-            n = collatz_iterate(n)
+            # n = collatz_iterate(n)
+            if n%2 == 0:
+                n /= 2
+            else:
+                n = 3*n + 1
         # print("Cycle length for",num, "is", cycleLength)
         # print(cycle)
-        
-        # if cycleLength > maxCycleLength:
-        #     maxCycleLength = cycleLength  
+        if cycleLength > maxCycleLength:
+            # print("Max cycle length is going from",maxCycleLength,"to",cycleLength)
+            maxCycleLength = cycleLength
 
         for i in range(0, len(cycle)):
             # if cycle[i+1] not in cycleLengthDict:
             if cycle[i] not in cycleLengthDict:
                 cycleLengthDict[cycle[i]] = cycleLength
                 # print("for ", element, "cycle length was",cycleLength)
-            cycleLength -= 1
-         
-    return max(cycleLengthDict.values())
+            cycleLength -= 1        # if cycleLength > maxCycleLength:
+
+    return maxCycleLength
 
 
 # -------------
@@ -120,14 +118,16 @@ def collatz_solve(r, w):
     r a reader
     w a writer
     """
+    dict = {1 : 1}
+    collatz_eval(1,1000000,dict)
     for s in r:
         i, j = collatz_read(s)
-        v = collatz_eval(i, j)
+        v = collatz_eval(i, j, dict)
         collatz_print(w, i, j, v)
 
 import sys
 if __name__ == "__main__":
-        r = StringIO("1 100\n100 2000\n201 2100\n900 10000\n")
-        w = StringIO()
-        collatz_solve(r, sys.stdout)
-    # collatz_solve(sys.stdin, sys.stdout)
+        # r = StringIO("1 100\n100 2000\n201 2100\n900 10000\n")
+        # w = StringIO()
+        # collatz_solve(r, sys.stdout)
+    collatz_solve(sys.stdin, sys.stdout)

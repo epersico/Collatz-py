@@ -33,6 +33,16 @@ def collatz_cycleLength(n):
             n = 3*n + 1
     return cycleLength
 
+# def collatz_eval (i,j) : 
+#     currentCycleLength = 0
+#     maxCycleLength = 0
+#     for num in range(i,j+1):
+#         currentCycleLength = collatz_cycleLength(num)
+#         if currentCycleLength > maxCycleLength:
+#             maxCycleLength = currentCycleLength
+#     return maxCycleLength
+
+
 def collatz_eval (i, j) :
     """
     i the beginning of the range, inclusive
@@ -49,15 +59,15 @@ def collatz_eval (i, j) :
             cycle.append(n)
             if n in cycleLengthDict:
                 cycleLength += cycleLengthDict[n] - 1
-                print("hit",n,"which was in dict with cycle length",cycleLengthDict[n])
+                # print("hit",n,"which was in dict with cycle length",cycleLengthDict[n])
                 break
             cycleLength += 1
             if n%2 == 0:
                 n /= 2
             else:
                 n = 3*n + 1
-        print("Cycle length for",num, "is", cycleLength)
-        print(cycle)
+        # print("Cycle length for",num, "is", cycleLength)
+        # print(cycle)
         if cycleLength > maxCycleLength :
             maxCycleLength = cycleLength  
 
@@ -66,13 +76,8 @@ def collatz_eval (i, j) :
             element = cycle.pop()
             if element not in cycleLengthDict:
                 cycleLengthDict[element] = cycleLength
-                print("for ", element, "cycle length was",cycleLength)
+                # print("for ", element, "cycle length was",cycleLength)
             cycleLength -= 1
-
-
-
-        # currentCycleLength = collatz_cycleLength(num)
-        # print("num", num, "has cycle length",currentCycleLength)
          
     return maxCycleLength
 
@@ -105,6 +110,6 @@ def collatz_solve (r, w) :
         v    = collatz_eval(i, j)
         collatz_print(w, i, j, v)
 
-# import sys
-# if __name__ == "__main__" :
-#     collatz_solve(sys.stdin, sys.stdout)
+import sys
+if __name__ == "__main__" :
+    collatz_solve(sys.stdin, sys.stdout)

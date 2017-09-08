@@ -40,11 +40,40 @@ def collatz_eval (i, j) :
     return the max cycle length of the range [i, j]
     """
     maxCycleLength = 0
+    cycleLengthDict = {1 : 1}
     for num in range(i,j+1):
-        currentCycleLength = collatz_cycleLength(num)
+        cycleLength = 1
+        cycle = []
+        n = num
+        while n != 1:
+            cycle.append(n)
+            if n in cycleLengthDict:
+                cycleLength += cycleLengthDict[n]
+                print("hit",n,"which was in dict with cycle length",cycleLengthDict[n])
+                break
+            cycleLength += 1
+            if n%2 == 0:
+                n /= 2
+            else:
+                n = 3*n + 1
+        print("Cycle length for",num, "is", cycleLength)
+        print(cycle)
+        if cycleLength > maxCycleLength :
+            maxCycleLength = cycleLength  
+
+        cycle.reverse()
+        for i in range(0,len(cycle)) :
+            element = cycle.pop()
+            if element not in cycleLengthDict:
+                cycleLengthDict[element] = cycleLength
+                print("for ", element, "cycle length was",cycleLength)
+            cycleLength -= 1
+
+
+
+        # currentCycleLength = collatz_cycleLength(num)
         # print("num", num, "has cycle length",currentCycleLength)
-        if currentCycleLength > maxCycleLength :
-            maxCycleLength = currentCycleLength            
+         
     return maxCycleLength
 
 
@@ -76,6 +105,6 @@ def collatz_solve (r, w) :
         v    = collatz_eval(i, j)
         collatz_print(w, i, j, v)
 
-import sys
-if __name__ == "__main__" :
-    collatz_solve(sys.stdin, sys.stdout)
+# import sys
+# if __name__ == "__main__" :
+#     collatz_solve(sys.stdin, sys.stdout)

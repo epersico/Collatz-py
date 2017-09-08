@@ -1,5 +1,21 @@
 .DEFAULT_GOAL := all
 
+FILES :=            \
+    collatz-tests   \
+    Collatz.html    \
+    Collatz.log     \
+    Collatz.py      \
+    RunCollatz.in   \
+    RunCollatz.out  \
+    RunCollatz.py   \
+    TestCollatz.out \
+    TestCollatz.py
+
+# uncomment these:
+#    .travis.yml                           \
+#    collatz-tests/GitHubID-RunCollatz.in  \
+#    collatz-tests/GitHubID-RunCollatz.out \
+
 ifeq ($(shell uname), Darwin)          # Apple
     PYTHON   := python3
     PIP      := pip
@@ -34,50 +50,62 @@ else                                   # UTCS
     AUTOPEP8 := autopep8
 endif
 
+.pylintrc:
+	$(PYLINT) --disable=locally-disabled --reports=no --generate-rcfile > $@
+
+collatz-tests:
+	git clone https://github.com/cs373t-summer-2017/collatz-tests.git
+
+Collatz.html: Collatz.py
+	$(PYDOC) -w Collatz
+
+Collatz.log:
+	git log > Collatz.log
+
+RunCollatz.pyx: Collatz.py RunCollatz.py .pylintrc
+	-$(MYPY)   Collatz.py
+	-$(PYLINT) Collatz.py
+	-$(MYPY)   RunCollatz.py
+	-$(PYLINT) RunCollatz.py
+	$(PYTHON)  RunCollatz.py < RunCollatz.in > RunCollatz.tmp
+	-diff RunCollatz.tmp RunCollatz.out
+
+TestCollatz.pyx: Collatz.py TestCollatz.py .pylintrc
+	-$(MYPY)     TestCollatz.py
+	-$(PYLINT)   TestCollatz.py
+	-$(COVERAGE) run    --branch TestCollatz.py
+	-$(COVERAGE) report -m
+
 all:
 
+check: $(FILES)
+
 clean:
-	cd examples; make clean
-	@echo
-	cd projects/collatz; make clean
+	rm -f  .coverage
+	rm -f  .pylintrc
+	rm -f  *.pyc
+	rm -f  *.tmp
+	rm -rf __pycache__
+	rm -rf .mypy_cache
 
 config:
 	git config -l
 
 docker:
-	docker run -it -v $(PWD):/usr/cs373 -w /usr/cs373 gpdowning/python
+	docker run -it -v $(PWD):/usr/collatz -w /usr/collatz gpdowning/python
 
-init:
-	touch README
-	git init
-	git add README
-	git commit -m 'first commit'
-	git remote add origin git@github.com:gpdowning/cs373.git
-	git push -u origin master
+format:
+	$(AUTOPEP8) -i Collatz.py
+	$(AUTOPEP8) -i RunCollatz.py
+	$(AUTOPEP8) -i TestCollatz.py
 
-pull:
+run: RunCollatz.pyx TestCollatz.pyx
+
+scrub:
 	make clean
-	@echo
-	git pull
-	git status
-
-push:
-	make clean
-	@echo
-	git add .gitignore
-	git add .travis.yml
-	git add examples
-	git add makefile
-	git add notes
-	git add projects/collatz
-	git commit -m "another commit"
-	git push
-	git status
-
-run:
-	cd examples; make run
-	@echo
-	cd projects/collatz; make run
+	rm -f  Collatz.html
+	rm -f  Collatz.log
+	rm -rf collatz-tests
 
 status:
 	make clean
@@ -86,34 +114,12 @@ status:
 	git remote -v
 	git status
 
-sync:
-	@rsync -r -t -u -v --delete              \
-    --include "Docker.txt"                   \
-    --include "Dockerfile"                   \
-    --include "Hello.py"                     \
-    --include "Assertions.py"                \
-    --include "UnitTests1.py"                \
-    --include "UnitTests2.py"                \
-    --include "UnitTests3.py"                \
-    --include "Coverage1.py"                 \
-    --include "Coverage2.py"                 \
-    --include "Coverage3.py"                 \
-    --exclude "*"                            \
-    ../../examples/python/ examples
-	@rsync -r -t -u -v --delete             \
-    --include "Collatz.py"                  \
-    --include "RunCollatz.py"               \
-    --include "RunCollatz.in"               \
-    --include "RunCollatz.out"              \
-    --include "TestCollatz.py"              \
-    --include "TestCollatz.out"             \
-    --exclude "*"                           \
-    ../../projects/python/collatz/ projects/collatz
-
-travis:
-	cd examples; make travis
-	@echo
-	cd projects/collatz; make travis
+travis: collatz-tests Collatz.html Collatz.log
+	make clean
+	ls -al
+	make run
+	ls -al
+	make -r check
 
 versions:
 	which cmake
@@ -141,9 +147,6 @@ versions:
 	$(COVERAGE) --version
 	@echo
 	which $(PYDOC)
-	$(PYDOC) --version
 	@echo
 	which $(AUTOPEP8)
 	$(AUTOPEP8) --version
-	@echo
-	$(PIP) list

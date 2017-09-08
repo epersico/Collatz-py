@@ -1,9 +1,0 @@
-__pycache__
-.coverage
-.DS_Store
-.pylintrc
-*.pyc
-collatz-tests
-Icon?
-RunCollatz.tmp
-TestCollatz.tmp

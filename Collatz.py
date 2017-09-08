@@ -26,6 +26,9 @@ def collatz_read(s):
 # ------------
 
 def collatz_cycleLength(n):
+    """
+    A basic version of the algorithm to compute the cycle length of n
+    """
     cycleLength = 1
     while n != 1:
         cycleLength += 1
@@ -35,16 +38,23 @@ def collatz_cycleLength(n):
             n = 3*n + 1
     return cycleLength
 
-# def collatz_eval (i,j) : 
-#     currentCycleLength = 0
-#     maxCycleLength = 0
-#     for num in range(i,j+1):
-#         currentCycleLength = collatz_cycleLength(num)
-#         if currentCycleLength > maxCycleLength:
-#             maxCycleLength = currentCycleLength
-#     return maxCycleLength
+def collatz_eval_old (i,j):
+    """
+    The old version of this.
+    I wanted a brute force version just so I could compare
+    """ 
+    currentCycleLength = 0
+    maxCycleLength = 0
+    for num in range(i,j+1):
+        currentCycleLength = collatz_cycleLength(num)
+        if currentCycleLength > maxCycleLength:
+            maxCycleLength = currentCycleLength
+    return maxCycleLength
 
 def collatz_iterate(n):
+    """
+    returns the next element in collatz sequence.
+    """
     if n%2 == 0:
         n /= 2
     else:
@@ -64,11 +74,8 @@ def collatz_eval(i, j, cycleLengthDict):
     for n in range(i, j+1):
         cycleLength = 1
         cycle = []
-        # cycle = np.zeroes(550,numpy.int32)
-        # cycle = array
         while True:
             cycle.append(n)
-            # cycle[cycleLength] = n
             if n in cycleLengthDict:
                 cycleLength += cycleLengthDict[n] - 1
                 # print("hit",n,"which was in dict with cycle length",cycleLengthDict[n])

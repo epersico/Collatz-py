@@ -48,7 +48,7 @@ def collatz_eval (i, j) :
         while n != 1:
             cycle.append(n)
             if n in cycleLengthDict:
-                cycleLength += cycleLengthDict[n]
+                cycleLength += cycleLengthDict[n] - 1
                 print("hit",n,"which was in dict with cycle length",cycleLengthDict[n])
                 break
             cycleLength += 1

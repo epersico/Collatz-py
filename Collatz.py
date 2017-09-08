@@ -6,12 +6,12 @@
 # Glenn P. Downing
 # ----------------------------------
 
-# from io import StringIO
+from io import StringIO
 # import cProfile
 # ------------
 # collatz_read
 # ------------
-import numpy as np
+# import numpy as np
 def collatz_read(s):
     """
     read two ints
@@ -44,6 +44,19 @@ def collatz_cycleLength(n):
 #             maxCycleLength = currentCycleLength
 #     return maxCycleLength
 
+def collatz_iterate(n):
+    if n%2 == 0:
+        n /= 2
+    else:
+        n = 3*n + 1
+    return n
+
+def keywithmaxval(d):
+     """ a) create a list of the dict's keys and values; 
+         b) return the key with the max value"""  
+     v=list(d.values())
+     k=list(d.keys())
+     return k[v.index(max(v))]
 
 def collatz_eval(i, j):
     """
@@ -54,33 +67,34 @@ def collatz_eval(i, j):
     maxCycleLength = 0
     cycleLengthDict = {1 : 1}
 
-    for num in range(i, j+1):
+    for n in range(i, j+1):
         cycleLength = 1
         cycle = []
-        n = num
-        while n != 1:
+        # cycle = np.zeroes(550,numpy.int32)
+        # cycle = array
+        while True:
             cycle.append(n)
+            # cycle[cycleLength] = n
             if n in cycleLengthDict:
                 cycleLength += cycleLengthDict[n] - 1
                 # print("hit",n,"which was in dict with cycle length",cycleLengthDict[n])
                 break
             cycleLength += 1
-            if n%2 == 0:
-                n /= 2
-            else:
-                n = 3*n + 1
+            n = collatz_iterate(n)
         # print("Cycle length for",num, "is", cycleLength)
         # print(cycle)
-        if cycleLength > maxCycleLength:
-            maxCycleLength = cycleLength  
+        
+        # if cycleLength > maxCycleLength:
+        #     maxCycleLength = cycleLength  
 
         for i in range(0, len(cycle)):
+            # if cycle[i+1] not in cycleLengthDict:
             if cycle[i] not in cycleLengthDict:
                 cycleLengthDict[cycle[i]] = cycleLength
                 # print("for ", element, "cycle length was",cycleLength)
             cycleLength -= 1
          
-    return maxCycleLength
+    return max(cycleLengthDict.values())
 
 
 # -------------
@@ -113,7 +127,7 @@ def collatz_solve(r, w):
 
 import sys
 if __name__ == "__main__":
-        # r = StringIO("1 100\n100 2000\n201 2100\n900 10000\n")
-        # w = StringIO()
-        # collatz_solve(r, sys.stdout)
-    collatz_solve(sys.stdin, sys.stdout)
+        r = StringIO("1 100\n100 2000\n201 2100\n900 10000\n")
+        w = StringIO()
+        collatz_solve(r, sys.stdout)
+    # collatz_solve(sys.stdin, sys.stdout)

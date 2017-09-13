@@ -12,7 +12,7 @@ FILES :=            \
     TestCollatz.py
 
 uncomment these:
-    .travis.yml                           \
+#    .travis.yml                           \
 #    collatz-tests/GitHubID-RunCollatz.in  \
 #    collatz-tests/GitHubID-RunCollatz.out \
 

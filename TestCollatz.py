@@ -54,6 +54,35 @@ class TestCollatz (TestCase) :
         v = collatz_eval(900, 1000)
         self.assertEqual(v, 174)
 
+    #to test if the meta cache works
+    def test_eval_5 (self) :
+        v = collatz_eval(5, 20000)
+        self.assertEqual(v,279)
+
+    def test_eval_6 (self) :
+        v = collatz_eval(5, 20001)
+        self.assertEqual(v,279)
+
+
+    def test_eval_7 (self) :
+        v = collatz_eval(878000, 879000)
+        self.assertEqual(v,326)
+
+    def test_eval_8 (self) :
+        v = collatz_eval(877001, 879000)
+        self.assertEqual(v,401)
+
+    def test_eval_9 (self) :
+        v = collatz_eval(876000, 877000)
+        self.assertEqual(v,370)
+
+    def test_eval_9 (self) :
+        v = collatz_eval(876000, 877999)
+        self.assertEqual(v,401)
+
+    def test_eval_10 (self) :
+        v = collatz_eval(1, 123456)
+        self.assertEqual(v,354)
     # -----
     # print
     # -----

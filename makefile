@@ -11,8 +11,8 @@ FILES :=            \
     TestCollatz.out \
     TestCollatz.py
 
-uncomment these:
-#    .travis.yml                           \
+#uncomment these:
+    .travis.yml                           \
 #    collatz-tests/GitHubID-RunCollatz.in  \
 #    collatz-tests/GitHubID-RunCollatz.out \
 
